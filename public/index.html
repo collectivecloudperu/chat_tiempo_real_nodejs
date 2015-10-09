@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chat en Tiempo Real con Node JS</title>
+    
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc1/js/bootstrap.min.js"></script>
+
+  </head>
+<body>
+
+  <div class="container">
+
+    <h1>Chat en Tiempo Real con Node JS</h1>
+
+    <div class="row">
+
+      <!-- Formulario -->
+      <form id="create-message" role="form">
+        <div class="form-group">
+          <input type="text" placeholder="Nombre" id="nombre" name="nombre" class="form-control" />
+        </div>
+        <div class="form-group">
+          <textarea placeholder="Mensaje" id="mensaje" name="mensaje" class="form-control"></textarea>
+        </div>
+          <input type="submit" value="Crear Mensaje" class="btn btn-primary col-lg-12" />        
+      </form>
+
+    </div>
+
+    <div class="row">
+
+      <!-- Mensajes -->
+      <div class="col-md-12" style="margin-top:20px;">
+        <ul id="mensajes" class="list-group">
+          <!-- Los mensajes caen acá -->
+        </ul>
+      </div>
+
+    </div>
+
+
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript" src="/js/app.js"></script>
+
+</body>
+</html>
