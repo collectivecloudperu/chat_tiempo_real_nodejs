@@ -1,46 +1,24 @@
-var http = require("http");
-var fs = require("fs");
-var path = require("path");
-var mime = require("mime");
+var express = require('express'),
+      app = express(),
+      server = require('http').createServer(app),
+      io = require('socket.io').listen(server),
+      mensajes = [],
+      sockets = [];
 
-function send404(response) {
-    response.writeHead(404, {"Content-type" : "text/plain"});
-    response.write("Error 404: resource not found");
-    response.end();
-}
+app.use( express.static(__dirname + '/public'));
 
-function sendPage(response, filePath, fileContents) {
-    response.writeHead(200, {"Content-type" : mime.lookup(path.basename(filePath))});
-    response.end(fileContents);
-}
+server.listen(process.env.PORT || 4000)
 
-function serverWorking(response, absPath) {
-    fs.exists(absPath, function(exists) {
-        if (exists) {
-            fs.readFile(absPath, function(err, data) {
-                if (err) {
-                    send404(response)
-                } else {
-                    sendPage(response, absPath, data);
-                }
-            });
-        } else {
-            send404(response);
-        }
-    });
-}
-        
-var server = http.createServer(function(request, response) {
-    var filePath = false;
+io.sockets.on('connection', function (socket) {
 
-    if (request.url == "/") {
-        filePath = "public/index.html";
-    } else {
-        filePath = "public" + request.url;
-    }
+  sockets.push(socket);
 
-    var absPath = "./" + filePath;
-    serverWorking(response, absPath);
+  socket.emit('messages-available', mensajes);
+
+    socket.on('add-message', function (data) {
+      mensajes.push(data);
+      sockets.forEach(function (socket) {
+        socket.emit('message-added', data);
+      });
+   });
 });
-
-var port_number = server.listen(process.env.PORT || 4000);
